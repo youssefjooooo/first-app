@@ -1,0 +1,7 @@
+.pages {
+    /* display: flex;
+    align-items: center;
+    flex-direction: column; */
+    gap: 10px;
+    padding: 50px;
+}
