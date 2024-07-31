@@ -15,17 +15,14 @@ async function fetchPost(postId) {
   return res.json();
 }
 
-async function PostContent({ post }) {
-  // const prom = await new Promise((resolve) => {
-  //   setTimeout(() => {
-  //     resolve();
-  //   }, 2000);
-  // });
+async function PostContent({ postId }) {
+  const post = await fetchPost(postId);
+
   return (
     <div
       style={{
         display: "flex",
-        alignItems: "cente",
+        alignItems: "center",
         justifyContent: "center",
         flexDirection: "column",
         gap: "5px",
@@ -49,8 +46,8 @@ async function PostContent({ post }) {
   );
 }
 
-async function Post({ params }) {
-  const post = await fetchPost(params.postId);
+function Post({ params }) {
+  const postId = params.postId;
 
   return (
     <div
@@ -67,9 +64,8 @@ async function Post({ params }) {
       }}>
       <h2>Post</h2>
       <Suspense fallback={<h1>Loading...</h1>}>
-        <PostContent post={post} />
+        <PostContent postId={postId} />
       </Suspense>
-
       <Link href="/posts" style={{ marginTop: "30px" }}>
         &larr; back
       </Link>
