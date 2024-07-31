@@ -2,20 +2,26 @@
 
 import Link from "next/link";
 import { Suspense } from "react";
-async function Post({ params }) {
-  const postId = params.postId;
+
+async function fetchPost(postId) {
   const res = await fetch(
     `https://jsonplaceholder.typicode.com/posts/${postId}`,
     {
-      //this is ISG (Inceremental Static Generation) which compines both SSG and SSR, Meaning it will cash the results for 2 mins (SSG) and then re rquest the api (SSR), which drastically increases the performance.
       next: {
         revalidate: 120,
       },
     }
   );
-  const post = await res.json();
+  return res.json();
+}
 
-  const postJSX = (
+async function PostContent({ post }) {
+  // const prom = await new Promise((resolve) => {
+  //   setTimeout(() => {
+  //     resolve();
+  //   }, 2000);
+  // });
+  return (
     <div
       style={{
         display: "flex",
@@ -34,13 +40,18 @@ async function Post({ params }) {
           borderBottom: "1px solid #333",
         }}>
         <h1 style={{ borderRight: "1px solid #333", padding: "20px" }}>
-          {postId}
+          {post.id}
         </h1>
         <h1>{post.title}</h1>
       </div>
       <strong>{post.body}</strong>
     </div>
   );
+}
+
+async function Post({ params }) {
+  const post = await fetchPost(params.postId);
+
   return (
     <div
       style={{
@@ -55,7 +66,9 @@ async function Post({ params }) {
         textAlign: "center",
       }}>
       <h2>Post</h2>
-      <Suspense fallback={<h1>Loading...</h1>}>{postJSX}</Suspense>
+      <Suspense fallback={<h1>Loading...</h1>}>
+        <PostContent post={post} />
+      </Suspense>
 
       <Link href="/posts" style={{ marginTop: "30px" }}>
         &larr; back

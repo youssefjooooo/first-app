@@ -4,7 +4,7 @@ import { Suspense } from "react";
 
 async function AllPosts() {
   const res = await fetch(`https://jsonplaceholder.typicode.com/posts`, {
-    // this tells next that it will request data every time this page renders (SSR)
+    // this tells next that it will request data every time this page renders (SSR), no good for performance.
     cash: "no-cash",
   });
   const posts = await res.json();
@@ -26,9 +26,7 @@ async function AllPosts() {
   );
   return (
     <div className={style.pages}>
-      <div>
-        <Suspense fallback={<h1>Loading...</h1>}>{postsJSX}</Suspense>
-      </div>
+      <div>{postsJSX}</div>
     </div>
   );
 }
